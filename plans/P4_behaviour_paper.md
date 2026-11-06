@@ -5,7 +5,7 @@
 **You depend on:** nothing while building. `common/synthetic.py` already gives you fake C4/C5 metrics with a planted weak effect, so your whole stats pipeline can be finished before anyone else is done.
 
 ## Tasks — behaviour (week 1)
-- [ ] Download the HCP **unrestricted behavioural CSV** from ConnectomeDB (small file; P1's account can also get it).
+- [ ] Download the HCP **unrestricted behavioural CSV** from BALSA (balsa.wustl.edu, HCP-Young Adult project; ConnectomeDB is retired).
 - [ ] Choose the primary working-memory score. Suggested: `ListSort_Unadj` (NIH Toolbox List Sorting WM). Alternative: `WM_Task_2bk_Acc`. Decide, then document why.
 - [ ] `src/p4_behaviour/make_behaviour.py` → `data/behaviour.csv` in C3 format, only for P1's subject list.
 - [ ] Send P1 the IDs that **have** the WM score, so P1 doesn't download subjects without behaviour data.

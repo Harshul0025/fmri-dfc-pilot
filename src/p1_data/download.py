@@ -4,8 +4,10 @@ Per subject (≈1 GB each):
     MNINonLinear/Results/<run>/<run>_hp2000_clean.nii.gz   (ICA-FIX cleaned, MNI volume)
     MNINonLinear/Results/<run>/Movement_RelativeRMS_mean.txt (mean frame-to-frame motion, mm)
 
-Credentials: get AWS keys from ConnectomeDB (db.humanconnectome.org → "Amazon S3 Access"),
-then store them as a named profile:
+Credentials (ConnectomeDB is retired; keys now come from BALSA, since Apr 2026):
+    1. Log in at https://balsa.wustl.edu and sign the HCP-YA Data Use Terms
+    2. Open the "HCP-Young Adult 2025" project → "Get/Reset AWS S3 access"
+    3. Store the keys as a named profile (S3 serves the 2017 S1200 release, which we use):
     ~/.aws/credentials
         [hcp]
         aws_access_key_id = ...
@@ -57,7 +59,7 @@ def main():
     try:
         s3 = boto3.Session(profile_name=args.profile).client("s3")
     except ProfileNotFound:
-        sys.exit(f"AWS profile '{args.profile}' not found. See the docstring at the top of this file.")
+        sys.exit(f"AWS profile '{args.profile}' not found. Get keys from BALSA — see the docstring at the top of this file.")
 
     failed = []
     for i, sid in enumerate(ids, 1):

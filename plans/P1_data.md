@@ -11,7 +11,8 @@
 - File format and atlas matching is the most fiddly debugging in the project.
 
 ## Tasks
-- [ ] **Day 1:** Create ConnectomeDB account, accept Open Access terms, get AWS S3 credentials for the `hcp-openaccess` bucket.
+- [x] **Day 1:** Create account (BALSA — ConnectomeDB is retired)
+- [ ] Sign HCP-YA Data Use Terms on BALSA → project "HCP-Young Adult 2025" → "Get/Reset AWS S3 access" → save as `[hcp]` profile in `~/.aws/credentials`
 - [ ] Pick 20 candidate subjects from HCP S1200 who have `rfMRI_REST1_LR` (extra buffer for QC drop-outs). Coordinate with P4 that they also have the working-memory score.
 - [ ] Download **only** per subject:
   - `MNINonLinear/Results/rfMRI_REST1_LR/rfMRI_REST1_LR_hp2000_clean.nii.gz` (ICA-FIX cleaned, MNI volume)
