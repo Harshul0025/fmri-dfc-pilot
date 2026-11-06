@@ -1,0 +1,12 @@
+numpy
+pandas
+scipy
+pyyaml
+matplotlib
+seaborn
+scikit-learn
+networkx
+bctpy
+nilearn
+nibabel
+boto3

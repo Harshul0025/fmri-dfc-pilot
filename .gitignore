@@ -1,0 +1,17 @@
+# HCP data must never be committed (data use terms)
+data/
+data_synthetic/
+results_synthetic/
+*.nii
+*.nii.gz
+*.dtseries.nii
+
+# big regenerable arrays (metrics CSVs and figures ARE committed)
+results/**/*.npy
+
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+~$*

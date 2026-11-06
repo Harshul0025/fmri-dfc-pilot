@@ -1,0 +1,32 @@
+# Shared parameters — change only after telling the group.
+
+data_root: data_synthetic        # switch to "data" when real data is ready
+
+atlas:
+  name: schaefer_2018
+  n_rois: 200
+  yeo_networks: 7
+
+hcp:
+  run: rfMRI_REST1_LR
+  tr: 0.72
+  n_timepoints: 1200
+
+qc:
+  max_mean_fd: 0.2               # mm; exclude subjects above this
+  min_timepoints: 1100
+
+static:
+  fisher_z: true
+  threshold_density: 0.15        # keep top 15% of edges for graph metrics
+  sensitivity_densities: [0.10, 0.20, 0.30]
+
+dynamic:
+  window_tr: 60                  # ~43 s at TR 0.72
+  step_tr: 5
+  n_states: 4                    # k for k-means; P3 justifies via elbow/silhouette
+  random_seed: 42
+
+synthetic:
+  n_subjects: 15
+  seed: 0
