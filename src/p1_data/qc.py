@@ -8,7 +8,7 @@ Rules (from config.yaml → qc):
     mean motion > max_mean_fd          → "high motion"
     T < min_timepoints                 → "too few timepoints"
     any ROI all-NaN / flat             → "bad ROI signal"
-    listed in candidates but no output → "missing / extraction failed"
+    downloaded but no output           → "missing / extraction failed"
 
 Plots → results/qc/ (or results_demo/qc/): carpet plot + 3 ROI traces per subject,
 and a motion bar chart with the threshold line.
@@ -28,7 +28,6 @@ import pandas as pd  # noqa: E402
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
 from common.io import load_config  # noqa: E402
-from download import read_ids  # noqa: E402
 
 
 def reasons_for(info, q, check_length):
@@ -79,9 +78,11 @@ def main():
         plot_subject(np.load(root / "timeseries" / f"sub-{info['subject_id']}.npy"),
                      info["subject_id"], figs)
 
-    if not args.demo:  # candidates that never produced output
+    if not args.demo:  # downloaded (data/raw/<id> exists) but no extraction output
         done = {r["subject_id"] for r in rows}
-        for sid in read_ids(REPO / "src/p1_data/candidates.txt"):
+        raw = REPO / "data" / "raw"
+        tried = sorted(p.name for p in raw.iterdir() if p.is_dir()) if raw.exists() else []
+        for sid in tried:
             if sid not in done:
                 rows.append(dict(subject_id=sid, run=cfg["hcp"]["run"], n_timepoints=0,
                                  mean_fd=None, included=False,

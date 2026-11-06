@@ -30,13 +30,8 @@
 - [ ] Write the **Data & Preprocessing** methods paragraph (draft done — fill numbers after real run) (dataset, run, atlas, QC rules, final N) → `paper/sections/methods_data.md`.
 
 ## Status
-Code done and tested on nilearn demo data (`--demo`). Remaining steps all need HCP access:
-```bash
-python src/p1_data/download.py --limit 1          # test with one subject
-python src/p1_data/download.py                    # all candidates (~20 GB)
-python src/p1_data/extract_timeseries.py --delete-raw
-python src/p1_data/qc.py                          # → data/subjects.csv + results/qc/
-```
+Code done. Real run in progress: CIFTI files, 15 subjects, one at a time (`bash src/p1_data/run_pipeline.sh 15`, log in `data/pipeline.log`). S3 → India gives only ~0.25 MB/s, so ~33 min per subject.
+Why CIFTI instead of the MNI volume: 440 MB vs 1 GB per subject, and it is HCP's recommended space. Same Schaefer parcel order, so the C1 contract is unchanged.
 
 ## Tip: start before HCP access comes through
 Run your extraction code on nilearn's small built-in dataset (`nilearn.datasets.fetch_development_fmri(n_subjects=2)`). Same code, real fMRI, works today.

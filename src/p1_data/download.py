@@ -1,8 +1,11 @@
 """Download only the files we need from the HCP open-access S3 bucket.
 
-Per subject (≈1 GB each):
-    MNINonLinear/Results/<run>/<run>_hp2000_clean.nii.gz   (ICA-FIX cleaned, MNI volume)
+Per subject:
+    MNINonLinear/Results/<run>/<run>_Atlas_hp2000_clean.dtseries.nii  (default, CIFTI, ≈440 MB)
+      or <run>_hp2000_clean.nii.gz with --format volume               (MNI volume, ≈1 GB)
     MNINonLinear/Results/<run>/Movement_RelativeRMS_mean.txt (mean frame-to-frame motion, mm)
+Both are ICA-FIX cleaned. CIFTI is the default: half the size (S3 → India is slow,
+~0.3 MB/s) and HCP's recommended grayordinate space.
 
 Credentials (ConnectomeDB is retired; keys now come from BALSA, since Apr 2026):
     1. Log in at https://balsa.wustl.edu and sign the HCP-YA Data Use Terms
@@ -16,6 +19,7 @@ Credentials (ConnectomeDB is retired; keys now come from BALSA, since Apr 2026):
 Usage (from repo root):
     python src/p1_data/download.py                 # all IDs in candidates.txt
     python src/p1_data/download.py --limit 1       # try one subject first
+    python src/p1_data/download.py --subject 100307 # one specific subject
     python src/p1_data/download.py --profile hcp --dry-run
 """
 import argparse
@@ -38,9 +42,10 @@ def read_ids(path: Path) -> list[str]:
             if ln.strip() and not ln.startswith("#")]
 
 
-def files_for(sid: str, run: str) -> list[str]:
+def files_for(sid: str, run: str, fmt: str = "cifti") -> list[str]:
     base = f"{PREFIX}/{sid}/MNINonLinear/Results/{run}"
-    return [f"{base}/{run}_hp2000_clean.nii.gz", f"{base}/Movement_RelativeRMS_mean.txt"]
+    img = f"{run}_Atlas_hp2000_clean.dtseries.nii" if fmt == "cifti" else f"{run}_hp2000_clean.nii.gz"
+    return [f"{base}/Movement_RelativeRMS_mean.txt", f"{base}/{img}"]
 
 
 def main():
@@ -48,13 +53,15 @@ def main():
     ap.add_argument("--ids", default=str(REPO / "src/p1_data/candidates.txt"))
     ap.add_argument("--profile", default="hcp")
     ap.add_argument("--limit", type=int)
+    ap.add_argument("--subject", help="download just this subject ID")
+    ap.add_argument("--format", choices=["cifti", "volume"], default="cifti")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
     cfg = load_config()
     run = cfg["hcp"]["run"]
     raw = REPO / "data" / "raw"
-    ids = read_ids(Path(args.ids))[: args.limit]
+    ids = [args.subject] if args.subject else read_ids(Path(args.ids))[: args.limit]
 
     try:
         s3 = boto3.Session(profile_name=args.profile).client("s3")
@@ -63,9 +70,9 @@ def main():
 
     failed = []
     for i, sid in enumerate(ids, 1):
-        for key in files_for(sid, run):
+        for key in files_for(sid, run, args.format):
             dest = raw / sid / Path(key).name
-            if dest.exists():
+            if dest.exists() or (REPO / "data" / "timeseries" / f"sub-{sid}.npy").exists():
                 print(f"[{i}/{len(ids)}] {sid}: {dest.name} already present")
                 continue
             if args.dry_run:
@@ -85,8 +92,10 @@ def main():
                 failed.append(sid)
 
     if failed:
+        sys.stderr.write(f"FAILED: {sorted(set(failed))}\n")
         print(f"\nFailed subjects (check access / availability): {sorted(set(failed))}")
     print("Done.")
+    sys.exit(1 if failed else 0)
 
 
 if __name__ == "__main__":
