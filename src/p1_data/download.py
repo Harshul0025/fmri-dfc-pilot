@@ -26,7 +26,11 @@ import argparse
 import sys
 from pathlib import Path
 
+import time
+
 import boto3
+from boto3.exceptions import RetriesExceededError
+from botocore.config import Config
 from botocore.exceptions import ClientError, NoCredentialsError, ProfileNotFound
 
 REPO = Path(__file__).resolve().parents[2]
@@ -64,7 +68,10 @@ def main():
     ids = [args.subject] if args.subject else read_ids(Path(args.ids))[: args.limit]
 
     try:
-        s3 = boto3.Session(profile_name=args.profile).client("s3")
+        s3 = boto3.Session(profile_name=args.profile).client(
+            "s3", region_name="us-east-1",
+            config=Config(retries={"max_attempts": 10, "mode": "adaptive"},
+                          connect_timeout=30, read_timeout=120))
     except ProfileNotFound:
         sys.exit(f"AWS profile '{args.profile}' not found. Get keys from BALSA — see the docstring at the top of this file.")
 
@@ -82,13 +89,25 @@ def main():
             tmp = dest.with_suffix(dest.suffix + ".part")
             try:
                 print(f"[{i}/{len(ids)}] {sid}: downloading {dest.name} ...", flush=True)
-                s3.download_file(BUCKET, key, str(tmp))
+                for attempt in range(1, 4):  # whole-file retries on network drops
+                    try:
+                        s3.download_file(BUCKET, key, str(tmp))
+                        break
+                    except RetriesExceededError:
+                        if attempt == 3:
+                            raise
+                        print(f"    network error, retry {attempt}/2 in 30 s ...", flush=True)
+                        time.sleep(30)
                 tmp.rename(dest)
             except NoCredentialsError:
                 sys.exit("No AWS credentials. See the docstring at the top of this file.")
             except ClientError as e:
                 tmp.unlink(missing_ok=True)
                 print(f"    FAILED ({e.response['Error'].get('Code')}): {key}")
+                failed.append(sid)
+            except RetriesExceededError:
+                tmp.unlink(missing_ok=True)
+                print(f"    FAILED (network, 3 attempts): {key}")
                 failed.append(sid)
 
     if failed:

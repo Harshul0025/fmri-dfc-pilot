@@ -12,9 +12,9 @@
 
 ## Tasks
 - [x] **Day 1:** Create account (BALSA — ConnectomeDB is retired)
-- [ ] Sign HCP-YA Data Use Terms on BALSA → project "HCP-Young Adult 2025" → "Get/Reset AWS S3 access" → save as `[hcp]` profile in `~/.aws/credentials`
-- [ ] Pick 20 candidate subjects from HCP S1200 who have `rfMRI_REST1_LR` (extra buffer for QC drop-outs). Coordinate with P4 that they also have the working-memory score.
-- [ ] Download **only** per subject:
+- [x] Sign HCP-YA Data Use Terms on BALSA → project "HCP-Young Adult 2025" → "Get/Reset AWS S3 access" → save as `[hcp]` profile in `~/.aws/credentials`
+- [x] Pick 20 candidate subjects from HCP S1200 who have `rfMRI_REST1_LR` (extra buffer for QC drop-outs). Coordinate with P4 that they also have the working-memory score.
+- [x] Download **only** per subject:
   - `MNINonLinear/Results/rfMRI_REST1_LR/rfMRI_REST1_LR_hp2000_clean.nii.gz` (ICA-FIX cleaned, MNI volume)
   - `MNINonLinear/Results/rfMRI_REST1_LR/Movement_RelativeRMS_mean.txt` (motion, for QC)
 - [x] Write `src/p1_data/download.py` (aws cli / boto3, takes a subject list file).
@@ -26,12 +26,14 @@
   - exclude if mean motion > `qc.max_mean_fd` or T < `qc.min_timepoints` or any ROI is all-zero/NaN
   - fill `exclusion_reason`
 - [x] Sanity plots: one carpet plot + one ROI time series per subject → `results/qc/`.
-- [ ] Delete raw `.nii.gz` after extraction if disk is tight (the `.npy` files are only ~1 MB each).
-- [ ] Write the **Data & Preprocessing** methods paragraph (draft done — fill numbers after real run) (dataset, run, atlas, QC rules, final N) → `paper/sections/methods_data.md`.
+- [x] Delete raw `.nii.gz` after extraction if disk is tight (the `.npy` files are only ~1 MB each).
+- [x] Write the **Data & Preprocessing** methods paragraph (dataset, run, atlas, QC rules, final N) → `paper/sections/methods_data.md`.
 
-## Status
-Code done. Real run in progress: CIFTI files, 15 subjects, one at a time (`bash src/p1_data/run_pipeline.sh 15`, log in `data/pipeline.log`). S3 → India gives only ~0.25 MB/s, so ~33 min per subject.
-Why CIFTI instead of the MNI volume: 440 MB vs 1 GB per subject, and it is HCP's recommended space. Same Schaefer parcel order, so the C1 contract is unchanged.
+## Status — DONE (6 Nov)
+15/15 subjects downloaded (CIFTI), extracted and QC-passed. N = 15, mean motion 0.089 ± 0.028 mm, no exclusions.
+Shared privately as `hcp_timeseries_15subj_FINAL.zip` (timeseries + subjects.csv + roi_labels.csv).
+Why CIFTI instead of the MNI volume: 440 MB vs 1 GB per subject (S3 → India ≈ 0.25 MB/s) and it is HCP's recommended space. Same Schaefer parcel order, so C1 is unchanged.
+Note for P2/P3: some subjects (e.g. 100408, 101107) have high between-network FC (≈0.4), likely global signal. Decide on and report global signal regression.
 
 ## Tip: start before HCP access comes through
 Run your extraction code on nilearn's small built-in dataset (`nilearn.datasets.fetch_development_fmri(n_subjects=2)`). Same code, real fMRI, works today.
