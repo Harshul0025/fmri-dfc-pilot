@@ -1,4 +1,4 @@
-# P1 — Data & Quality Control
+# P1 — Data & Quality Control  ·  Owner: **Vedansh** (Claude Code)
 
 **Effort: HIGHEST** (slow external steps + biggest risk). Start on day 1.
 **You produce:** C1 (time series) + C2 (subjects.csv) → see [CONTRACTS.md](../CONTRACTS.md)
@@ -30,6 +30,11 @@
 
 ## Tip: start before HCP access comes through
 Run your extraction code on nilearn's small built-in dataset (`nilearn.datasets.fetch_development_fmri(n_subjects=2)`). Same code, real fMRI, works today.
+
+## Repo admin (weeks 3–4, balances your load)
+- [ ] Protect `main` on GitHub (require a PR); review and merge everyone's PRs.
+- [ ] Motion confound check across the project: correlate `mean_fd` with P2/P3 metrics and send the table to Harshul.
+- [ ] Final reproducibility test: fresh clone → `pip install -r requirements.txt` → run every script in order → same numbers. Write `RUN_ALL.md` with the exact command sequence.
 
 ## Definition of done
 - `data/timeseries/` has ≥10 included subjects in C1 format

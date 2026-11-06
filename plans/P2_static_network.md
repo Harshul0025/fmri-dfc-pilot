@@ -1,10 +1,14 @@
-# P2 — Static Functional Connectivity & Network Analysis
+# P2 — Static Functional Connectivity & Network Analysis  ·  Owner: **Vishesh** (Codex)
 
 **Effort: MEDIUM** (most straightforward methods; well-documented libraries).
 **You consume:** C1, C2 · **You produce:** C4 (`results/static/metrics.csv`) → see [CONTRACTS.md](../CONTRACTS.md)
 **You depend on:** nothing while building (use `data_synthetic/`). Real run needs P1's data.
 
 Because this role is the lightest, P2 also owns the **shared figure style** and **reproducibility** (see the last section).
+
+## Codex tips
+- Codex reads `AGENTS.md` automatically. Give it one task at a time, e.g. *"Implement src/p2_static/compute_fc.py per plans/P2_static_network.md and CONTRACTS.md C1/C4; run it on the synthetic data."*
+- Every task below has an exact input/output, so you can check each one by running it: the output file must match C4 in CONTRACTS.md.
 
 ## Tasks
 - [ ] `src/p2_static/compute_fc.py`

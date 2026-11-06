@@ -6,12 +6,32 @@ Full study design: `fMRI_Pilot_Research_Paper_Draft_Bullet_Points.docx`
 
 ## Team
 
-| Role | Owner | Plan | Code folder |
-|---|---|---|---|
-| P1 — Data & QC | _name_ | [plans/P1_data.md](plans/P1_data.md) | `src/p1_data/` |
-| P2 — Static FC & Network | _name_ | [plans/P2_static_network.md](plans/P2_static_network.md) | `src/p2_static/` |
-| P3 — Dynamic FC & Brain States | _name_ | [plans/P3_dynamic_states.md](plans/P3_dynamic_states.md) | `src/p3_dynamic/` |
-| P4 — Behaviour, Stats & Paper | _name_ | [plans/P4_behaviour_paper.md](plans/P4_behaviour_paper.md) | `src/p4_behaviour/`, `paper/` |
+| Role | Owner | AI tool | Plan | Code folder | Branch |
+|---|---|---|---|---|---|
+| P1 — Data & QC + repo admin | **Vedansh** | Claude Code | [plans/P1_data.md](plans/P1_data.md) | `src/p1_data/` | `p1-vedansh` |
+| P2 — Static FC & Network | **Vishesh** | Codex | [plans/P2_static_network.md](plans/P2_static_network.md) | `src/p2_static/`, `common/plotting.py` | `p2-vishesh` |
+| P3 — Dynamic FC & Brain States | **Vishal** | Claude Code | [plans/P3_dynamic_states.md](plans/P3_dynamic_states.md) | `src/p3_dynamic/` | `p3-vishal` |
+| P4 — Behaviour, Stats & Paper | **Harshul** | Claude Code | [plans/P4_behaviour_paper.md](plans/P4_behaviour_paper.md) | `src/p4_behaviour/`, `paper/` | `p4-harshul` |
+
+### Why this split is equal
+Total effort is about the same for each person; it just peaks at different times:
+
+| Week | Vedansh (P1) | Vishesh (P2) | Vishal (P3) | Harshul (P4) |
+|---|---|---|---|---|
+| 1 | **Heavy** — HCP access, download, extraction | Medium — FC + figures on synthetic | Medium — sliding windows on synthetic | Medium — behaviour CSV, stats pipeline, intro |
+| 2 | Medium — QC, motion checks, hand off data | Medium — network metrics + sensitivity | **Heavy** — k-means, K selection, robustness | Medium — related work, methods skeleton |
+| 3 | Medium — review & merge PRs, confound checks | Light — rerun on real data, write section | Medium — rerun on real data, write section | **Heavy** — real stats + assemble paper |
+| 4 | Medium — reproducibility run, final review | Light — figure polish, review | Light — review | **Heavy** — discussion, final draft |
+
+- **Vishesh (Codex)** gets P2: clearly specified, standard numpy/networkx code with no open-ended research decisions. A solid medium-sized task, plus the shared plot style.
+- **Claude users** get the roles with more open-ended debugging and judgement (HCP download/atlas issues, choosing K, writing the paper).
+- **Vedansh** is also repo admin: reviews and merges PRs and does the final "fresh clone → full rerun" reproducibility check.
+
+### Working with your AI
+`CLAUDE.md` (Claude Code) and `AGENTS.md` (Codex) are already in the repo, so the AI knows the rules automatically. To start, open the repo and say:
+> Read CONTRACTS.md and plans/PX_....md. Implement the first unchecked task in src/pX_.../ and test it on the synthetic data.
+
+Tick the checkboxes in your plan file as you finish tasks, so everyone can see progress on GitHub.
 
 ## How we work independently (Diwali-proof)
 

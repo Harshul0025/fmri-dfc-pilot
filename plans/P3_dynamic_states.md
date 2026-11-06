@@ -1,4 +1,4 @@
-# P3 — Dynamic Functional Connectivity & Brain States
+# P3 — Dynamic Functional Connectivity & Brain States  ·  Owner: **Vishal** (Claude Code)
 
 **Effort: HIGH** (most methodological choices; heaviest compute).
 **You consume:** C1, C2 · **You produce:** C5 (`results/dynamic/metrics.csv`) → see [CONTRACTS.md](../CONTRACTS.md)

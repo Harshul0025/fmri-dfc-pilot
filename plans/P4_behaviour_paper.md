@@ -1,4 +1,4 @@
-# P4 — Behaviour, Statistics & Paper Lead
+# P4 — Behaviour, Statistics & Paper Lead  ·  Owner: **Harshul** (Claude Code)
 
 **Effort: MEDIUM coding + HIGH writing.** The workload grows in the final week, so front-load the writing.
 **You consume:** C2, C4, C5 · **You produce:** C3 (`behaviour.csv`), the stats, and the assembled paper
