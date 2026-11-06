@@ -4,6 +4,19 @@ Exploratory pilot: static + dynamic functional connectivity, brain states, and t
 
 Full study design: `fMRI_Pilot_Research_Paper_Draft_Bullet_Points.docx`
 
+## 📍 Current status — 6 Nov 2026
+
+| Person | Done | Next (step by step) |
+|---|---|---|
+| **Vedansh (P1)** | ✅ Real data: 15/15 subjects, all pass QC. Zip shared privately. Motion check done → GSR switch added | Review & merge PRs → motion check on P3 metrics → final reproducibility run (week 3–4) |
+| **Vishesh (P2)** | ✅ All P2 code on synthetic data (branch `p2-vishesh`); verified by Vedansh that it runs on real data | 1. Unzip real data, `data_root: data` · 2. Pull `main` (gets GSR) · 3. Rerun 3 scripts · 4. Update `paper/sections/static.md` with real numbers · 5. One no-GSR sensitivity run · 6. Open PR |
+| **Vishal (P3)** | ⏳ Not pushed yet | 1. Build on synthetic data (all of P3 plan) · 2. Switch to real data · 3. Push C5 metrics + figures · 4. Write `paper/sections/dynamic.md` |
+| **Harshul (P4)** | ⏳ Not pushed yet | 1. BALSA account → behavioural CSV → `behaviour.csv` for our 15 IDs · 2. Stats pipeline on synthetic metrics · 3. Paper skeleton + intro · 4. Real stats once P2/P3 metrics arrive |
+
+**Key decision (6 Nov): global signal regression (GSR) is ON by default.** Without it, head motion drove whole-brain FC (QC-FC: 55% of edges motion-related; mean FC vs motion ρ = 0.65, p = 0.01). With GSR: 13% of edges, and the static graph metrics no longer correlate significantly with motion. GSR is applied inside `common/io.py:load_timeseries()`, so no one changes their code. Run once with `global_signal_regression: false` as a sensitivity check. P4 must still use motion (`mean_fd`) as a covariate.
+
+**Real data** = `hcp_timeseries_15subj_FINAL.zip` (private, from Vedansh). Unzip in repo root → `data/`; set `data_root: data` locally (don't commit that line).
+
 ## Team
 
 | Role | Owner | AI tool | Plan | Code folder | Branch |

@@ -15,6 +15,7 @@ All paths are relative to `data_root` (from `config.yaml`): `data_synthetic/` wh
 - NumPy array, `float32`, shape **(T, 200)** — rows = time points, columns = Schaefer-200 ROIs (in atlas order, 7-network version).
 - Each column z-scored (mean 0, std 1).
 - HCP rest run: T = 1200, TR = 0.72 s.
+- Files on disk are **without** global signal regression. `common/io.py:load_timeseries()` applies GSR when `preprocessing.global_signal_regression: true` in `config.yaml` (default). Always load through it.
 
 ## C2 — Subject list  (P1 → everyone)
 
@@ -25,7 +26,7 @@ All paths are relative to `data_root` (from `config.yaml`): `data_synthetic/` wh
 | subject_id | str | HCP ID |
 | run | str | e.g. `rfMRI_REST1_LR` |
 | n_timepoints | int | T after QC |
-| mean_fd | float | mean framewise displacement (mm) |
+| mean_fd | float | mean relative head motion (HCP `Movement_RelativeRMS_mean`, mm) |
 | included | bool | passes QC |
 | exclusion_reason | str | empty if included |
 
@@ -71,6 +72,17 @@ Also: `results/static/sub-<id>_fc.npy` — (200, 200) Fisher-z matrix (git-ignor
 
 K comes from `config.yaml` (`dynamic.n_states`).
 Also: `results/dynamic/state_centroids.npy` — (K, 200, 200).
+
+## C6 — ROI labels  (shared, committed)
+
+`common/schaefer200_7net_labels.csv` — load with `common.io.load_roi_labels()`
+
+| column | meaning |
+|---|---|
+| roi_index | 0–199, same as the column index in C1 |
+| label | Schaefer name, e.g. `7Networks_LH_Vis_1` |
+| hemisphere | `LH` / `RH` |
+| network | `Vis`, `SomMot`, `DorsAttn`, `SalVentAttn`, `Limbic`, `Cont`, `Default` |
 
 ---
 

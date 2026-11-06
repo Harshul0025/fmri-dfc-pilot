@@ -4,6 +4,12 @@
 **You consume:** C1, C2 · **You produce:** C5 (`results/dynamic/metrics.csv`) → see [CONTRACTS.md](../CONTRACTS.md)
 **You depend on:** nothing while building. The synthetic data has hidden states built in, so you can check that your clustering finds them.
 
+## Updates (6 Nov) — read first
+- **Real data is ready** (15 subjects): get `hcp_timeseries_15subj_FINAL.zip` from Vedansh, unzip in the repo root, set `data_root: data` locally. Build on synthetic first if you haven't yet.
+- **GSR is on by default** (`config.yaml → preprocessing`). It is applied inside `load_timeseries()`, so just load through `common/io.py`. Do one sensitivity run with it off and report whether the states look similar.
+- **ROI → network labels:** `common.io.load_roi_labels()` (C6) for sorting centroid plots.
+- **Motion:** `mean_fd` is in `subjects.csv`. Correlate each `state<k>_frac` with it and report it (motion can create fake states).
+
 ## Tasks
 - [ ] `src/p3_dynamic/sliding_window.py`
   - windows of `dynamic.window_tr` TRs, step `dynamic.step_tr` (Hann or rectangular taper, choose one and document it)
@@ -26,7 +32,7 @@
 
 ## Pitfalls to mention in the paper
 - Short windows give noisy FC; long windows hide the dynamics. That is why we test robustness.
-- Head motion can create fake "states". Ask P1 for per-subject `mean_fd` and check whether state fractions correlate with motion.
+- Head motion can create fake "states". Use `mean_fd` from `subjects.csv` and check whether state fractions correlate with motion.
 
 ## Definition of done
 - C5 file pushed for real data, plus the K-selection plot, centroid figures and robustness note

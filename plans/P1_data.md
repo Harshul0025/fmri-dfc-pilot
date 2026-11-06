@@ -40,7 +40,8 @@ Run your extraction code on nilearn's small built-in dataset (`nilearn.datasets.
 
 ## Repo admin (weeks 3–4, balances your load)
 - [ ] Protect `main` on GitHub (require a PR); review and merge everyone's PRs.
-- [ ] Motion confound check across the project: correlate `mean_fd` with P2/P3 metrics and send the table to Harshul.
+- [x] Motion confound check, static part: QC-FC 55% → 13% of edges with GSR; GSR switch added to config/io (6 Nov)
+- [ ] Same check on P3 dynamic metrics once Vishal pushes
 - [ ] Final reproducibility test: fresh clone → `pip install -r requirements.txt` → run every script in order → same numbers. Write `RUN_ALL.md` with the exact command sequence.
 
 ## Definition of done

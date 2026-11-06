@@ -30,9 +30,32 @@ def load_subjects(cfg: dict | None = None, included_only: bool = True) -> pd.Dat
     return df[df["included"]].reset_index(drop=True) if included_only else df
 
 
+def global_signal_regression(ts: np.ndarray) -> np.ndarray:
+    """Regress the mean signal over all ROIs out of every ROI, then re-z-score."""
+    g = ts.mean(1, keepdims=True)
+    g = (g - g.mean()) / g.std()
+    resid = ts - g * ((g * ts).sum(0) / (g * g).sum())
+    sd = resid.std(0, ddof=1)
+    sd[sd == 0] = 1
+    return ((resid - resid.mean(0)) / sd).astype(np.float32)
+
+
 def load_timeseries(subject_id: str, cfg: dict | None = None) -> np.ndarray:
-    """(T, n_rois) float32 array — contract C1."""
-    return np.load(data_dir(cfg) / "timeseries" / f"sub-{subject_id}.npy")
+    """(T, n_rois) float32 array — contract C1.
+
+    If config.yaml → preprocessing.global_signal_regression is true (default),
+    the global signal is regressed out here, so every script gets the same data.
+    """
+    cfg = cfg or load_config()
+    ts = np.load(data_dir(cfg) / "timeseries" / f"sub-{subject_id}.npy")
+    if cfg.get("preprocessing", {}).get("global_signal_regression", False):
+        ts = global_signal_regression(ts)
+    return ts
+
+
+def load_roi_labels() -> pd.DataFrame:
+    """Schaefer-200 (7-network) labels: roi_index, label, hemisphere, network — contract C6."""
+    return pd.read_csv(REPO / "common" / "schaefer200_7net_labels.csv")
 
 
 def load_behaviour(cfg: dict | None = None) -> pd.DataFrame:

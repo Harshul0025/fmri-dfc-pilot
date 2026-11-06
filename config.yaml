@@ -12,6 +12,10 @@ hcp:
   tr: 0.72
   n_timepoints: 1200
 
+preprocessing:
+  global_signal_regression: true   # applied in common/io.py:load_timeseries (see CONTRACTS C1)
+                                   # false = sensitivity analysis; motion check showed GSR is needed
+
 qc:
   max_mean_fd: 0.2               # mm; exclude subjects above this
   min_timepoints: 1100
