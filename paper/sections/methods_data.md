@@ -1,0 +1,11 @@
+## Data and Preprocessing  *(draft — P1, fill the [brackets] after the real run)*
+
+**Dataset.** We used resting-state fMRI data from the Human Connectome Project (HCP) Young Adult S1200 release (Van Essen et al., 2013). [N_candidates] healthy young adults were selected from the HCP "unrelated" subset with a complete resting-state session and a non-missing working-memory score. Data were accessed under the HCP Open Access Data Use Terms.
+
+**Imaging data.** For each participant we used one resting-state run (`rfMRI_REST1_LR`; 1,200 volumes, TR = 0.72 s, ≈14.4 min, 2 mm isotropic, 3T Siemens Skyra with multiband factor 8). We used the minimally preprocessed, ICA-FIX denoised volumetric data in MNI space (`*_hp2000_clean.nii.gz`; Glasser et al., 2013; Salimi-Khorshidi et al., 2014), which includes motion correction, spatial normalisation, high-pass filtering (2000 s FWHM) and removal of noise components. No further spatial smoothing was applied.
+
+**Parcellation and signal extraction.** Each brain was divided into 200 cortical regions using the Schaefer 2018 atlas (7-network version, 2 mm; Schaefer et al., 2018). For each region, the mean BOLD signal over its voxels was extracted with nilearn [version] (`NiftiLabelsMasker`) and z-scored over time, giving a 1,200 × 200 time-series matrix per participant.
+
+**Quality control.** Participants were excluded if (i) mean relative head motion (HCP `Movement_RelativeRMS_mean`) exceeded 0.2 mm, (ii) fewer than 1,100 volumes were available, or (iii) any region had a missing or constant signal. Carpet plots of every participant were visually inspected. [N_excluded] participants were excluded ([reasons]), leaving **N = [N_final]** for analysis (mean motion = [mean ± SD] mm).
+
+**Reproducibility.** Subject IDs, run, atlas, QC thresholds and software versions are recorded in the project repository (`config.yaml`, `src/p1_data/candidates.txt`, `requirements.txt`).

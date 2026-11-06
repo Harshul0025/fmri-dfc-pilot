@@ -16,17 +16,26 @@
 - [ ] Download **only** per subject:
   - `MNINonLinear/Results/rfMRI_REST1_LR/rfMRI_REST1_LR_hp2000_clean.nii.gz` (ICA-FIX cleaned, MNI volume)
   - `MNINonLinear/Results/rfMRI_REST1_LR/Movement_RelativeRMS_mean.txt` (motion, for QC)
-- [ ] Write `src/p1_data/download.py` (aws cli / boto3, takes a subject list file).
-- [ ] Write `src/p1_data/extract_timeseries.py`:
+- [x] Write `src/p1_data/download.py` (aws cli / boto3, takes a subject list file).
+- [x] Write `src/p1_data/extract_timeseries.py`:
   - `nilearn.datasets.fetch_atlas_schaefer_2018(n_rois=200, yeo_networks=7, resolution_mm=2)`
   - `NiftiLabelsMasker(labels_img=..., standardize="zscore_sample")` → `(1200, 200)` array
   - save as `data/timeseries/sub-<id>.npy` (float32)
-- [ ] Write `src/p1_data/qc.py` → builds `data/subjects.csv`:
+- [x] Write `src/p1_data/qc.py` → builds `data/subjects.csv`:
   - exclude if mean motion > `qc.max_mean_fd` or T < `qc.min_timepoints` or any ROI is all-zero/NaN
   - fill `exclusion_reason`
-- [ ] Sanity plots: one carpet plot + one ROI time series per subject → `results/qc/`.
+- [x] Sanity plots: one carpet plot + one ROI time series per subject → `results/qc/`.
 - [ ] Delete raw `.nii.gz` after extraction if disk is tight (the `.npy` files are only ~1 MB each).
-- [ ] Write the **Data & Preprocessing** methods paragraph (dataset, run, atlas, QC rules, final N) → `paper/sections/methods_data.md`.
+- [ ] Write the **Data & Preprocessing** methods paragraph (draft done — fill numbers after real run) (dataset, run, atlas, QC rules, final N) → `paper/sections/methods_data.md`.
+
+## Status
+Code done and tested on nilearn demo data (`--demo`). Remaining steps all need HCP access:
+```bash
+python src/p1_data/download.py --limit 1          # test with one subject
+python src/p1_data/download.py                    # all candidates (~20 GB)
+python src/p1_data/extract_timeseries.py --delete-raw
+python src/p1_data/qc.py                          # → data/subjects.csv + results/qc/
+```
 
 ## Tip: start before HCP access comes through
 Run your extraction code on nilearn's small built-in dataset (`nilearn.datasets.fetch_development_fmri(n_subjects=2)`). Same code, real fMRI, works today.

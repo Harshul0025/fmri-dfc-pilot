@@ -1,0 +1,23 @@
+# Candidate HCP S1200 subjects (from the commonly used "unrelated 100" set).
+# 20 listed so ~15 survive QC. Replace with the output of select_subjects.py
+# once the behavioural CSV is available (keeps only subjects with a WM score).
+100307
+100408
+101107
+101309
+101915
+103111
+103414
+103818
+105014
+105115
+106016
+108828
+110411
+111312
+111716
+113619
+113922
+114419
+115320
+116524

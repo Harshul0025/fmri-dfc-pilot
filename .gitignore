@@ -2,6 +2,8 @@
 data/
 data_synthetic/
 results_synthetic/
+data_demo/
+results_demo/
 *.nii
 *.nii.gz
 *.dtseries.nii
